@@ -37,7 +37,7 @@ CyberArk estates often have strong controls around vaulting and privileged acces
 ## Local run
 
 ```powershell
-Set-Location "C:\Users\chaus\dev\repos\cyberark-connector-observability-exporter"
+cd cyberark-connector-observability-exporter
 $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
 cargo run
 ```
@@ -60,7 +60,7 @@ cargo run
 ## Validation
 
 ```powershell
-Set-Location "C:\Users\chaus\dev\repos\cyberark-connector-observability-exporter"
+cd cyberark-connector-observability-exporter
 $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
 cargo test
 cargo build
@@ -91,4 +91,4 @@ flowchart LR
   F --> G
 ```
 
-More detail lives in [C:\Users\chaus\dev\repos\cyberark-connector-observability-exporter\docs\architecture.md](/C:/Users/chaus/dev/repos/cyberark-connector-observability-exporter/docs/architecture.md).
+More detail lives in [docs/architecture.md](./docs/architecture.md).
