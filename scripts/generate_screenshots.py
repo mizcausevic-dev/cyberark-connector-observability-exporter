@@ -11,6 +11,14 @@ LEGACY = [
     "02-queue-lanes.png",
     "03-escalation-detail.png",
     "04-proof.png",
+    "01-overview.svg",
+    "02-connector-board.svg",
+    "03-audit-log.svg",
+    "04-metrics-proof.svg",
+    "01-overview-v2.svg",
+    "02-connector-board-v2.svg",
+    "03-audit-log-v2.svg",
+    "04-metrics-proof-v2.svg",
 ]
 
 
@@ -438,8 +446,8 @@ def metrics_svg() -> str:
 if __name__ == "__main__":
     for legacy in LEGACY:
         (OUT / legacy).unlink(missing_ok=True)
-    write("01-overview.svg", overview_svg())
-    write("02-connector-board.svg", connectors_svg())
-    write("03-audit-log.svg", audit_svg())
-    write("04-metrics-proof.svg", metrics_svg())
+    write("01-overview-v2.svg", overview_svg())
+    write("02-connector-board-v2.svg", connectors_svg())
+    write("03-audit-log-v2.svg", audit_svg())
+    write("04-metrics-proof-v2.svg", metrics_svg())
     print("rendered screenshots")
