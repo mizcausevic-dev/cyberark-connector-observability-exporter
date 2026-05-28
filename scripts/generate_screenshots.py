@@ -327,22 +327,22 @@ def connector_detail_card(x: int, y: int, connector: dict) -> str:
 
 def overview_svg() -> str:
     body = hero(
-        "Control-plane summary for CyberArk connector health.",
-        "Connector count, pool pressure, auth failures, latency, and exporter coverage at a glance.",
+        "CyberArk connector health control plane.",
+        "Connector count, pool pressure, auth failures, and exporter coverage at a glance.",
     )
     body += dedent(
         f"""\
         <rect x="278" y="460" width="676" height="440" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
         <text x="314" y="456" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">POOL PRESSURE BY CONNECTOR LANE</text>
-        {wrapped_text("Where saturation is starting to outrun comfortable connector health.", 314, 496, 42, 30, 24, "#f5f7fd", "Georgia, Times New Roman, serif", "700")}
-        {wrapped_text("A connector can look alive and still be heading toward blind-spot territory if saturation, stale scrapes, and auth failures rise together.", 314, 560, 66, 20, 14, "#96a9c6", "Inter, Segoe UI, sans-serif")}
+        {wrapped_text("Where pool pressure is outrunning safe connector health.", 314, 496, 40, 30, 24, "#f5f7fd", "Georgia, Times New Roman, serif", "700")}
+        {wrapped_text("Saturation, stale scrapes, and auth failures are the earliest signals that a connector lane is becoming a blind spot.", 314, 560, 62, 20, 14, "#96a9c6", "Inter, Segoe UI, sans-serif")}
         <line x1="320" y1="790" x2="910" y2="790" stroke="rgba(255,255,255,0.10)" />
         {bar_chart()}
         <rect x="976" y="460" width="590" height="440" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
         <text x="1012" y="456" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">TOP CONNECTOR BOARD</text>
         {wrapped_text("The riskiest exporter lanes stay visible.", 1012, 496, 32, 30, 24, "#f5f7fd", "Georgia, Times New Roman, serif", "700")}
         {connector_row(1008, 554, 526, CONNECTORS[0])}
-        {wrapped_text("The README should show why this exporter matters immediately: connector pressure, exporter trust, and remediation direction on the same surface.", 1012, 796, 58, 20, 13, "#dce7fb", "Inter, Segoe UI, sans-serif")}
+        {wrapped_text("The README should make connector pressure, exporter trust, and remediation direction obvious on first glance.", 1012, 796, 54, 20, 13, "#dce7fb", "Inter, Segoe UI, sans-serif")}
         """
     )
     return svg_shell("OVERVIEW SNAPSHOT", body)
@@ -350,15 +350,15 @@ def overview_svg() -> str:
 
 def connectors_svg() -> str:
     body = hero(
-        "Review queue for connector reliability pressure.",
-        "The connectors most likely to need remediation first, with risk posture and export trust on the same board.",
+        "Connector remediation review queue.",
+        "The connectors most likely to need remediation first, with risk and export trust on the same board.",
     )
     body += dedent(
         f"""\
         <rect x="278" y="460" width="1288" height="440" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
         <text x="314" y="456" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">CONNECTOR BOARD</text>
-        {wrapped_text("Each connector combines pool saturation, auth failures, latency, and telemetry freshness.", 314, 496, 54, 30, 24, "#f5f7fd", "Georgia, Times New Roman, serif", "700")}
-        {wrapped_text("This is the practical operator surface for deciding which connector pool needs load relief, auth cleanup, certificate work, or an OTel export fix.", 314, 560, 74, 20, 14, "#96a9c6", "Inter, Segoe UI, sans-serif")}
+        {wrapped_text("Each connector combines saturation, auth failures, latency, and telemetry freshness.", 314, 496, 52, 30, 24, "#f5f7fd", "Georgia, Times New Roman, serif", "700")}
+        {wrapped_text("Use this board to decide which connector lane needs load relief, auth cleanup, certificate work, or an OTel export fix.", 314, 560, 66, 20, 14, "#96a9c6", "Inter, Segoe UI, sans-serif")}
         {connector_detail_card(314, 548, CONNECTORS[0])}
         {connector_detail_card(734, 548, CONNECTORS[1])}
         {connector_detail_card(1154, 548, CONNECTORS[2])}
@@ -384,14 +384,14 @@ def audit_svg() -> str:
         )
         y += 62
     body = hero(
-        "Audit evidence for connector-exporter operations.",
+        "Audit evidence for exporter operations.",
         "A replayable log of scrapes, export failures, and remediation recommendations.",
     )
     body += dedent(
         f"""\
         <rect x="278" y="460" width="1288" height="440" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
         <text x="314" y="456" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">AUDIT EVIDENCE</text>
-        {wrapped_text("The exporter should leave behind a replayable trail, not just a gauge.", 314, 496, 47, 30, 24, "#f5f7fd", "Georgia, Times New Roman, serif", "700")}
+        {wrapped_text("The exporter should leave behind a replayable trail, not just a gauge.", 314, 496, 44, 30, 24, "#f5f7fd", "Georgia, Times New Roman, serif", "700")}
         <rect x="314" y="548" width="1218" height="308" rx="22" fill="rgba(2,6,12,0.90)" stroke="rgba(255,255,255,0.08)" />
         <rect x="314" y="548" width="1218" height="46" rx="22" fill="rgba(255,255,255,0.03)" />
         <circle cx="338" cy="571" r="5" fill="rgba(255,121,135,0.7)" />
@@ -413,14 +413,14 @@ def metrics_svg() -> str:
         )
         y += 20
     body = hero(
-        "Metrics preview for the Prometheus and OTel export path.",
+        "Prometheus and OTel export preview.",
         "The exporter makes connector health scrapeable, alertable, and reviewable in one lane.",
     )
     body += dedent(
         f"""\
         <rect x="278" y="460" width="500" height="440" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
         <text x="314" y="456" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">EXPORTER CONFIGURATION</text>
-        {wrapped_text("Prometheus text output plus clear exporter posture.", 314, 496, 42, 30, 24, "#f5f7fd", "Georgia, Times New Roman, serif", "700")}
+        {wrapped_text("Prometheus text output with clear exporter posture.", 314, 496, 40, 30, 24, "#f5f7fd", "Georgia, Times New Roman, serif", "700")}
         <rect x="314" y="548" width="428" height="88" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
         <text x="338" y="574" fill="#6f83a0" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">SCRAPE INTERVAL</text>
         <text x="338" y="612" fill="#f5f7fd" font-size="30" font-family="Inter, Segoe UI, sans-serif" font-weight="800">30 seconds</text>
@@ -436,7 +436,7 @@ def metrics_svg() -> str:
         <circle cx="844" cy="484" r="5" fill="rgba(246,196,106,0.7)" />
         <circle cx="862" cy="484" r="5" fill="rgba(73,215,158,0.7)" />
         <text x="886" y="488" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">/METRICS</text>
-        {wrapped_text("The README proof should show the metrics surface is real, queryable, and tied back to connector health.", 834, 548, 58, 18, 13, "#96a9c6", "Inter, Segoe UI, sans-serif")}
+        {wrapped_text("The README proof should show that the metrics surface is real, queryable, and tied back to connector health.", 834, 548, 56, 18, 13, "#96a9c6", "Inter, Segoe UI, sans-serif")}
         {''.join(metric_lines)}
         """
     )

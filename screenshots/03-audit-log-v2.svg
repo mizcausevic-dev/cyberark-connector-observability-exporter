@@ -61,7 +61,7 @@
           <text x="1290" y="81" fill="#f4f7ff" font-size="12" font-family="Inter, Segoe UI, sans-serif" font-weight="700">4 / 5 lanes stable</text>
           <rect x="278" y="132" width="1288" height="292" rx="28" fill="rgba(9,16,28,0.96)" stroke="rgba(255,255,255,0.06)" />
 <text x="320" y="172" fill="#74c8ff" font-size="11" letter-spacing="5" font-family="Inter, Segoe UI, sans-serif" font-weight="700">CYBERARK CONNECTOR OBSERVABILITY EXPORTER</text>
-<text x="320" y="234" fill="#f5f7fd" font-size="40" font-family="Georgia, Times New Roman, serif" font-weight="700"><tspan x="320" dy="0">Audit evidence for connector-exporter operations.</tspan></text>
+<text x="320" y="234" fill="#f5f7fd" font-size="40" font-family="Georgia, Times New Roman, serif" font-weight="700"><tspan x="320" dy="0">Audit evidence for exporter operations.</tspan></text>
 <text x="320" y="322" fill="#96a9c6" font-size="21" font-family="Inter, Segoe UI, sans-serif" font-weight="400"><tspan x="320" dy="0">A replayable log of scrapes, export failures, and remediation recommendations.</tspan></text>
 <rect x="320" y="342" width="248" height="126" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
 <text x="344" y="368" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">CONNECTORS</text>
@@ -81,7 +81,7 @@
 <text x="1142" y="438" fill="#dce7fb" font-size="13" font-family="Inter, Segoe UI, sans-serif" font-weight="400"><tspan x="1142" dy="0">Drain the broker pool, rotate credentials, and</tspan><tspan x="1142" dy="18">move the lane into OTel before the next review</tspan><tspan x="1142" dy="18">window.</tspan></text>
 <rect x="278" y="460" width="1288" height="440" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
 <text x="314" y="456" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">AUDIT EVIDENCE</text>
-<text x="314" y="496" fill="#f5f7fd" font-size="24" font-family="Georgia, Times New Roman, serif" font-weight="700"><tspan x="314" dy="0">The exporter should leave behind a replayable</tspan><tspan x="314" dy="30">trail, not just a gauge.</tspan></text>
+<text x="314" y="496" fill="#f5f7fd" font-size="24" font-family="Georgia, Times New Roman, serif" font-weight="700"><tspan x="314" dy="0">The exporter should leave behind a</tspan><tspan x="314" dy="30">replayable trail, not just a gauge.</tspan></text>
 <rect x="314" y="548" width="1218" height="308" rx="22" fill="rgba(2,6,12,0.90)" stroke="rgba(255,255,255,0.08)" />
 <rect x="314" y="548" width="1218" height="46" rx="22" fill="rgba(255,255,255,0.03)" />
 <circle cx="338" cy="571" r="5" fill="rgba(255,121,135,0.7)" />
