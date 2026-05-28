@@ -2,6 +2,27 @@
 
 All notable changes to this project are documented here.
 
+## [1.1.0] - 2026-05-28
+
+### Changed
+
+- **Visual overhaul of every HTML route.** Pulled in the Gemini-built reference design: Instrument Serif headlines with italic accent words, JetBrains Mono labels with leading colored dots, brighter brand glow (Camunda-blue style `#74c8ff` with `0 0 14-18px` shadows on active nav, action pills, and status chips), pulsing live-loop dot on the status chip, and a leading colored side-rail on the active sidebar entry.
+- Status pills (`healthy` / `watch` / `critical`) now carry leading per-status SVG icons (check / clock / triangle) instead of color-only differentiation.
+- Eyebrow chips, KPI labels, stat-card labels, and section-head labels all use JetBrains Mono with leading dots — the consistent metadata language that ties the surfaces together.
+- Added OG / Twitter / theme-color meta on every route for share-card rendering on LinkedIn / Slack / Mastodon.
+- `shell()` signature split into `(page_title, h1_html, subtitle, current, body)` so the h1 can carry HTML markup (italic accent word) while the `<title>` and meta tags stay plain-text — preventing raw HTML from leaking into the page header.
+
+### Screenshots
+
+- **Replaced the Python SVG-mock generator** (`scripts/generate_screenshots.py` + `screenshots/*-v3.svg`) with **real browser-rendered PNG captures** via headless Microsoft Edge: `scripts/render_readme_assets.ps1`. The script builds the release binary, starts it on port 4978, walks the four screenshot routes at 1600px-wide viewports, and writes `01-overview-proof.png` / `02-connector-board-proof.png` / `03-audit-log-proof.png` / `04-metrics-proof.png`.
+- README updated to inline the new PNG screenshots with descriptive alt text + a short caption under each, replacing the collapsed `<details>` block from v1.0.
+
+### Preserved
+
+- `src/data.rs`, `src/engine.rs`, `src/models.rs` — connector fleet, scoring engine, and types are unchanged.
+- All five HTML routes, all seven JSON APIs, the Prometheus `/metrics` payload shape.
+- 5/5 `cargo test` green.
+
 ## [1.0.0] - 2026-05-14
 
 ### Released

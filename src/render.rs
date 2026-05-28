@@ -1,7 +1,7 @@
 use crate::engine;
 use crate::models::ConnectorAssessment;
 
-fn shell(title: &str, subtitle: &str, current: &str, body: &str) -> String {
+fn shell(page_title: &str, h1_html: &str, subtitle: &str, current: &str, body: &str) -> String {
     let summary = engine::dashboard_summary();
     let nav = [
         ("/", "Overview", "overview"),
@@ -37,23 +37,40 @@ fn shell(title: &str, subtitle: &str, current: &str, body: &str) -> String {
         .collect::<Vec<_>>()
         .join("");
 
+    let meta_description = "CyberArk connector observability exporter — Rust + Axum service for pool saturation, auth failure pressure, latency drift, and OpenTelemetry/Prometheus coverage of the privileged-access connector fleet.";
+
     format!(
-        r#"<!doctype html>
+        r##"<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
+    <title>{page_title}</title>
+    <meta name="description" content="{meta_description}" />
+    <meta name="theme-color" content="#04070D" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Kinetic Gain" />
+    <meta property="og:title" content="{page_title}" />
+    <meta property="og:description" content="{meta_description}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="{page_title}" />
+    <meta name="twitter:description" content="{meta_description}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
     <style>
       :root {{
         color-scheme: dark;
         --bg: #04070d;
         --panel: rgba(9, 16, 28, 0.92);
         --line: rgba(255,255,255,0.07);
+        --line-strong: rgba(148,163,184,.18);
         --text: #f5f7fd;
         --muted: #96a9c6;
         --soft: #6d809b;
         --blue: #74c8ff;
+        --blue-bright: #8FD4FF;
+        --blue-glow: rgba(116,200,255,.34);
         --indigo: #5d78ff;
         --green: #49d79e;
         --amber: #f6c46a;
@@ -62,14 +79,18 @@ fn shell(title: &str, subtitle: &str, current: &str, body: &str) -> String {
       * {{ box-sizing: border-box; }}
       body {{
         margin: 0;
-        font-family: Inter, "Segoe UI", system-ui, sans-serif;
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
         color: var(--text);
         background:
-          radial-gradient(circle at top left, rgba(116,200,255,0.14), transparent 24%),
-          radial-gradient(circle at top right, rgba(255,121,135,0.08), transparent 16%),
+          radial-gradient(1100px 600px at 18% -8%, rgba(116,200,255,0.16), transparent 55%),
+          radial-gradient(900px 520px at 95% 8%, rgba(93,120,255,0.12), transparent 55%),
+          radial-gradient(700px 420px at 50% 100%, rgba(255,121,135,0.06), transparent 60%),
           linear-gradient(180deg, #02050a 0%, #050912 100%);
+        -webkit-font-smoothing: antialiased;
       }}
       a {{ color: inherit; text-decoration: none; }}
+      svg {{ display: block; }}
+      .mono {{ font-family: "JetBrains Mono", "Cascadia Code", Consolas, monospace; }}
       .shell {{ min-height: 100vh; display: grid; grid-template-columns: 248px minmax(0,1fr); }}
       .sidebar {{
         background: rgba(0,0,0,0.3);
@@ -88,14 +109,23 @@ fn shell(title: &str, subtitle: &str, current: &str, body: &str) -> String {
         background: linear-gradient(135deg, #0c97c2, #5d78ff); color:white; font-weight:900;
         box-shadow: 0 0 18px rgba(93,120,255,0.28);
       }}
-      .brand strong {{ display:block; font-size:14px; }}
-      .brand span {{ display:block; margin-top:4px; color:var(--blue); font-size:10px; letter-spacing:.18em; text-transform:uppercase; }}
+      .brand strong {{ display:block; font-size:14px; letter-spacing:-.005em; }}
+      .brand span {{ display:block; margin-top:4px; color:var(--blue); font-size:10px; letter-spacing:.18em; text-transform:uppercase; font-family:"JetBrains Mono", monospace; font-weight:600; }}
       nav {{ margin-top: 18px; }}
       .side-link {{
-        display:block; padding:13px 14px; border-radius:14px; color:#8195b4; font-size:12px;
-        font-weight:700; text-transform:uppercase; letter-spacing:.12em; transition:all 150ms ease;
+        display:block; padding:11px 14px; border-radius:12px; color:#8195b4; font-size:11px;
+        font-family:"JetBrains Mono", monospace;
+        font-weight:600; text-transform:uppercase; letter-spacing:.12em; transition:all 150ms ease;
+        position:relative;
       }}
-      .side-link.active {{ color:var(--blue); background:rgba(116,200,255,0.08); border:1px solid rgba(116,200,255,0.16); }}
+      .side-link.active {{
+        color:var(--blue-bright); background:rgba(116,200,255,0.10); border:1px solid rgba(116,200,255,0.22);
+        box-shadow: 0 0 14px rgba(116,200,255,0.16);
+      }}
+      .side-link.active::before {{
+        content:""; position:absolute; left:-18px; top:50%; transform:translateY(-50%);
+        width:3px; height:18px; border-radius:2px; background:var(--blue); box-shadow: 0 0 10px var(--blue);
+      }}
       .side-link:hover {{ color:var(--text); background:rgba(255,255,255,0.04); }}
       .meta {{ margin-top:auto; padding:16px 12px 8px; border-top:1px solid rgba(255,255,255,0.06); }}
       .meta dt {{ color:#687c98; font-size:10px; text-transform:uppercase; letter-spacing:.14em; margin-bottom:4px; }}
@@ -105,19 +135,23 @@ fn shell(title: &str, subtitle: &str, current: &str, body: &str) -> String {
         padding:0 34px; background:rgba(0,0,0,0.34); border-bottom:1px solid rgba(255,255,255,0.06); backdrop-filter: blur(16px);
       }}
       .status-chip {{
-        display:inline-flex; align-items:center; gap:10px; padding:9px 14px; border-radius:999px;
-        border:1px solid rgba(116,200,255,0.14); background:rgba(116,200,255,0.05); color:#b9e1ff;
-        font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.18em;
+        display:inline-flex; align-items:center; gap:10px; padding:8px 14px; border-radius:999px;
+        border:1px solid rgba(116,200,255,0.22); background:rgba(116,200,255,0.08); color:var(--blue-bright);
+        font-family:"JetBrains Mono", monospace;
+        font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.16em;
       }}
-      .status-dot {{ width:8px; height:8px; border-radius:50%; background:var(--blue); box-shadow:0 0 12px rgba(116,200,255,0.84); }}
+      .status-dot {{ width:7px; height:7px; border-radius:50%; background:var(--blue); box-shadow:0 0 10px rgba(116,200,255,0.84); animation: pulse 2s ease-in-out infinite; }}
+      @keyframes pulse {{ 0%, 100% {{ opacity:1; }} 50% {{ opacity:.6; }} }}
       .topbar-right {{ display:flex; align-items:center; gap:22px; }}
       .meta-block {{ display:flex; flex-direction:column; align-items:flex-end; }}
       .meta-block span {{ color:#6d809b; font-size:9px; text-transform:uppercase; letter-spacing:.15em; }}
       .meta-block strong {{ margin-top:4px; font-size:11px; text-transform:uppercase; letter-spacing:.12em; }}
       .action-pill {{
-        display:inline-flex; align-items:center; padding:12px 16px; border-radius:999px; color:white;
-        background:linear-gradient(135deg, #0f8fbf, #5d78ff); box-shadow:0 0 20px rgba(93,120,255,0.24);
-        font-size:10px; font-weight:900; letter-spacing:.18em; text-transform:uppercase;
+        display:inline-flex; align-items:center; padding:10px 16px; border-radius:999px; color:white;
+        background:linear-gradient(135deg, #74c8ff, #5d78ff); box-shadow:0 0 18px var(--blue-glow);
+        font-family:"JetBrains Mono", monospace;
+        font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+        border:1px solid rgba(255,255,255,.16);
       }}
       .wrap {{ max-width: 1280px; margin:0 auto; padding:34px; }}
       .hero {{
@@ -125,28 +159,81 @@ fn shell(title: &str, subtitle: &str, current: &str, body: &str) -> String {
         background: linear-gradient(180deg, rgba(9,16,28,0.96), rgba(6,11,20,0.94));
         box-shadow: 0 26px 60px rgba(0,0,0,0.34);
       }}
-      .hero-eyebrow {{ margin-bottom:18px; color:var(--blue); font-size:11px; letter-spacing:.28em; text-transform:uppercase; font-weight:800; }}
-      h1 {{ margin:0; font-size:clamp(38px,5vw,70px); line-height:.92; font-family:Georgia, "Times New Roman", serif; letter-spacing:-.04em; }}
+      .hero-eyebrow {{
+        display:inline-flex; align-items:center; gap:8px;
+        margin-bottom:20px; color:var(--blue-bright);
+        font-family:"JetBrains Mono", monospace;
+        font-size:11px; letter-spacing:.18em; text-transform:uppercase; font-weight:700;
+        padding:5px 10px; border-radius:999px;
+        border:1px solid rgba(116,200,255,.22); background:rgba(116,200,255,.08);
+      }}
+      .hero-eyebrow::before {{
+        content:""; width:6px; height:6px; border-radius:50%;
+        background:var(--blue); box-shadow:0 0 10px var(--blue);
+      }}
+      h1 {{
+        margin:0; font-size:clamp(42px,5.4vw,74px); line-height:.96;
+        font-family:"Instrument Serif", Georgia, "Times New Roman", serif;
+        font-weight:400; letter-spacing:-.02em;
+      }}
+      h1 .accent-word {{ font-style:italic; color:var(--blue-bright); }}
       .hero-subtitle {{ margin-top:14px; max-width:860px; color:var(--muted); font-size:19px; line-height:1.55; }}
       .hero-strip {{ display:flex; flex-wrap:wrap; gap:14px; margin-top:24px; }}
-      .hero-kpi {{ min-width:180px; padding:14px 16px; border-radius:18px; border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.03); }}
-      .hero-kpi .k {{ color:#6f83a0; font-size:10px; text-transform:uppercase; letter-spacing:.14em; font-weight:800; }}
-      .hero-kpi .v {{ margin-top:6px; font-size:28px; font-weight:800; }}
+      .hero-kpi {{
+        min-width:180px; padding:14px 16px; border-radius:16px;
+        border:1px solid var(--line-strong);
+        background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.005));
+      }}
+      .hero-kpi .k {{
+        display:inline-flex; align-items:center; gap:6px;
+        color:var(--soft); font-family:"JetBrains Mono", monospace;
+        font-size:10px; text-transform:uppercase; letter-spacing:.14em; font-weight:600;
+      }}
+      .hero-kpi .k::before {{ content:""; width:5px; height:5px; border-radius:50%; background:var(--blue); box-shadow:0 0 6px var(--blue); }}
+      .hero-kpi .v {{ margin-top:8px; font-size:30px; font-weight:700; font-family:"JetBrains Mono", monospace; letter-spacing:-.03em; }}
       .hero-callout {{
         margin-top:18px; padding:18px 20px; border-radius:18px; border:1px solid rgba(255,255,255,0.06); background:rgba(2,8,17,0.62);
       }}
-      .hero-callout strong {{ display:block; color:var(--amber); font-size:10px; text-transform:uppercase; letter-spacing:.18em; margin-bottom:8px; }}
-      .hero-callout p {{ margin:0; color:#dce7fb; font-size:17px; line-height:1.5; }}
+      .hero-callout {{
+        margin-top:18px; padding:18px 20px; border-radius:18px;
+        border:1px solid rgba(246,196,106,.22);
+        background:linear-gradient(180deg, rgba(246,196,106,.08), rgba(246,196,106,.02));
+      }}
+      .hero-callout strong {{
+        display:flex; align-items:center; gap:6px;
+        color:var(--amber); font-family:"JetBrains Mono", monospace;
+        font-size:10px; text-transform:uppercase; letter-spacing:.18em; margin-bottom:8px;
+      }}
+      .hero-callout strong::before {{ content:""; width:6px; height:6px; border-radius:50%; background:var(--amber); box-shadow:0 0 8px var(--amber); }}
+      .hero-callout p {{ margin:0; color:#FFEEC2; font-size:17px; line-height:1.5; }}
       .tab-row {{ display:flex; gap:10px; flex-wrap:wrap; margin-top:20px; }}
       .tab-pill {{
-        display:inline-flex; align-items:center; padding:10px 14px; border-radius:999px; border:1px solid rgba(255,255,255,0.08);
-        background:rgba(255,255,255,0.03); color:#afc0d8; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.12em;
+        display:inline-flex; align-items:center; padding:9px 14px; border-radius:999px; border:1px solid transparent;
+        background:transparent; color:#afc0d8;
+        font-family:"JetBrains Mono", monospace;
+        font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.12em;
+        transition:background .15s ease, color .15s ease, border-color .15s ease;
       }}
-      .tab-pill.active {{ color:var(--amber); border-color:rgba(246,196,106,0.18); background:rgba(246,196,106,0.08); }}
+      .tab-pill:hover {{ color:var(--text); background:rgba(255,255,255,.04); border-color:var(--line); }}
+      .tab-pill.active {{
+        color:white; background:linear-gradient(135deg, #74c8ff, #5d78ff);
+        border-color:rgba(255,255,255,.16);
+        box-shadow:0 0 16px var(--blue-glow);
+      }}
       .page-section {{ margin-top:24px; border-radius:26px; border:1px solid var(--line); background:var(--panel); overflow:hidden; box-shadow:0 24px 54px rgba(0,0,0,0.24); }}
       .section-head {{ padding:20px 24px 14px; border-bottom:1px solid rgba(255,255,255,0.05); }}
-      .section-head strong {{ display:block; color:var(--blue); font-size:10px; text-transform:uppercase; letter-spacing:.2em; margin-bottom:10px; }}
-      .section-head h2 {{ margin:0; font-family:Georgia, "Times New Roman", serif; font-size:24px; letter-spacing:-.03em; }}
+      .section-head strong {{
+        display:inline-flex; align-items:center; gap:6px;
+        color:var(--blue-bright); font-family:"JetBrains Mono", monospace;
+        font-size:10px; text-transform:uppercase; letter-spacing:.16em; font-weight:700;
+        margin-bottom:10px;
+      }}
+      .section-head strong::before {{ content:""; width:6px; height:6px; border-radius:50%; background:var(--blue); box-shadow:0 0 6px var(--blue); }}
+      .section-head h2 {{
+        margin:0; font-family:"Instrument Serif", Georgia, "Times New Roman", serif;
+        font-weight:400; font-size:28px; line-height:1.12; letter-spacing:-.018em;
+      }}
+      .section-head h2 .accent-word {{ font-style:italic; color:var(--blue-bright); }}
       .section-head p {{ margin:10px 0 0; color:var(--muted); font-size:15px; line-height:1.55; }}
       .section-body {{ padding:24px; }}
       .stats-grid, .three-col {{ display:grid; gap:18px; grid-template-columns:repeat(4,minmax(0,1fr)); }}
@@ -156,9 +243,12 @@ fn shell(title: &str, subtitle: &str, current: &str, body: &str) -> String {
         background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.08));
       }}
       .stat-card .label, .micro {{
-        color:#71839d; font-size:10px; text-transform:uppercase; letter-spacing:.16em; font-weight:800;
+        display:inline-flex; align-items:center; gap:6px;
+        color:var(--soft); font-family:"JetBrains Mono", monospace;
+        font-size:10px; text-transform:uppercase; letter-spacing:.14em; font-weight:600;
       }}
-      .stat-card .value {{ margin-top:10px; font-size:36px; font-weight:900; }}
+      .stat-card .label::before {{ content:""; width:5px; height:5px; border-radius:50%; background:var(--blue); box-shadow:0 0 6px var(--blue); }}
+      .stat-card .value {{ margin-top:14px; font-size:42px; font-weight:700; font-family:"JetBrains Mono", monospace; letter-spacing:-.03em; line-height:1; }}
       .stat-card .sub, .metric-card .desc {{ margin-top:10px; color:var(--muted); font-size:14px; line-height:1.45; }}
       .metric-card .title {{ margin-top:8px; font-size:16px; font-weight:800; }}
       .panel-grid {{ display:grid; gap:14px; }}
@@ -187,11 +277,14 @@ fn shell(title: &str, subtitle: &str, current: &str, body: &str) -> String {
       .connector-card h3 {{ margin:0; font-size:22px; font-weight:800; letter-spacing:-.03em; }}
       .meta-text {{ margin-top:8px; color:var(--muted); font-size:13px; }}
       .tag {{
-        display:inline-flex; align-items:center; justify-content:center; padding:8px 12px; border-radius:999px; font-size:10px; font-weight:900; letter-spacing:.16em; text-transform:uppercase;
+        display:inline-flex; align-items:center; gap:6px; padding:7px 12px 7px 9px;
+        border-radius:999px; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+        font-family:"JetBrains Mono", monospace; white-space:nowrap;
       }}
-      .healthy {{ color:var(--green); background:rgba(73,215,158,0.12); border:1px solid rgba(73,215,158,0.14); }}
-      .watch {{ color:var(--amber); background:rgba(246,196,106,0.12); border:1px solid rgba(246,196,106,0.14); }}
-      .critical {{ color:var(--red); background:rgba(255,121,135,0.12); border:1px solid rgba(255,121,135,0.14); }}
+      .tag svg {{ width:14px; height:14px; }}
+      .healthy {{ color:#A8F0BF; background:rgba(73,215,158,0.10); border:1px solid rgba(73,215,158,0.28); }}
+      .watch {{ color:#FFE29B; background:rgba(246,196,106,0.10); border:1px solid rgba(246,196,106,0.28); }}
+      .critical {{ color:#FFC2CC; background:rgba(255,121,135,0.12); border:1px solid rgba(255,121,135,0.32); }}
       .score-stack {{ text-align:right; }}
       .score-stack .label {{ color:#6f83a0; font-size:9px; text-transform:uppercase; letter-spacing:.16em; font-weight:800; }}
       .score-stack .value {{ margin-top:6px; font-size:28px; font-weight:900; }}
@@ -285,7 +378,7 @@ fn shell(title: &str, subtitle: &str, current: &str, body: &str) -> String {
         <div class="wrap">
           <section class="hero">
             <div class="hero-eyebrow">CyberArk Connector Observability Exporter</div>
-            <h1>{title}</h1>
+            <h1>{h1_html}</h1>
             <p class="hero-subtitle">{subtitle}</p>
             <div class="hero-strip">
               <div class="hero-kpi"><div class="k">Connectors</div><div class="v">{connector_count}</div></div>
@@ -309,8 +402,10 @@ fn shell(title: &str, subtitle: &str, current: &str, body: &str) -> String {
       </main>
     </div>
   </body>
-</html>"#,
-        title = title,
+</html>"##,
+        page_title = page_title,
+        h1_html = h1_html,
+        meta_description = meta_description,
         subtitle = subtitle,
         body = body,
         side_links = side_links,
@@ -446,6 +541,7 @@ pub fn render_overview() -> String {
 
     shell(
         "Control-plane summary for CyberArk connector health.",
+        r#"Control-plane summary for CyberArk connector <em class="accent-word">health.</em>"#,
         "Connector count, pool pressure, auth failures, latency, and exporter coverage at a glance.",
         "overview",
         &body,
@@ -477,6 +573,7 @@ pub fn render_connectors() -> String {
 
     shell(
         "Review queue for connector reliability pressure.",
+        r#"Review queue for connector reliability <em class="accent-word">pressure.</em>"#,
         "The connectors most likely to need containment or remediation first.",
         "connectors",
         &body,
@@ -541,6 +638,7 @@ pub fn render_audit() -> String {
 
     shell(
         "Audit evidence for connector-exporter operations.",
+        r#"Audit evidence for connector-exporter <em class="accent-word">operations.</em>"#,
         "A replayable log of scrapes, export failures, and remediation recommendations.",
         "audit",
         &body,
@@ -596,6 +694,7 @@ pub fn render_metrics_preview() -> String {
 
     shell(
         "Metrics preview for the Prometheus and OTel export path.",
+        r#"Metrics preview for the Prometheus and OTel export <em class="accent-word">path.</em>"#,
         "The exporter makes connector health scrapeable, alertable, and reviewable in one lane.",
         "metrics",
         &body,
@@ -634,10 +733,19 @@ pub fn render_docs() -> String {
 
     shell(
         "Rust exporter documentation for connector observability.",
+        r#"Rust exporter documentation for connector <em class="accent-word">observability.</em>"#,
         "Prometheus metrics, OpenTelemetry export posture, and a review-friendly connector-health model.",
         "docs",
         body,
     )
+}
+
+fn verdict_icon(verdict: &str) -> &'static str {
+    match verdict {
+        "critical" => r#"<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.5 14.5 13H1.5L8 1.5Z"/><path d="M8 6.5v3"/><circle cx="8" cy="11.4" r="0.6" fill="currentColor"/></svg>"#,
+        "watch" => r#"<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 1.5"/></svg>"#,
+        _ => r#"<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.4 3.4 3.2L13 5"/></svg>"#,
+    }
 }
 
 fn connector_card(connector: &ConnectorAssessment) -> String {
@@ -659,7 +767,7 @@ fn connector_card(connector: &ConnectorAssessment) -> String {
               <h3>{name}</h3>
               <div class="meta-text">{pool} · {region} · {target} · {auth_mode}</div>
             </div>
-            <span class="tag {verdict_class}">{verdict}</span>
+            <span class="tag {verdict_class}">{verdict_icon}{verdict}</span>
             <div class="score-stack"><div class="label">Risk score</div><div class="value">{risk}</div></div>
           </div>
           <div class="connector-bottom">
@@ -686,6 +794,7 @@ fn connector_card(connector: &ConnectorAssessment) -> String {
         auth_mode = connector.snapshot.auth_mode,
         verdict_class = connector.verdict,
         verdict = connector.verdict,
+        verdict_icon = verdict_icon(&connector.verdict),
         risk = connector.risk_score,
         bars = score_bars(connector),
         top_concern = connector.top_concern,
