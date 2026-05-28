@@ -59,35 +59,35 @@
           <text x="1095" y="81" fill="#f4f7ff" font-size="12" font-family="Inter, Segoe UI, sans-serif" font-weight="700">80% OTel enabled</text>
           <text x="1290" y="62" fill="#6f83a0" font-size="9" letter-spacing="2" font-family="Inter, Segoe UI, sans-serif" font-weight="700">EXPORTER HEALTH</text>
           <text x="1290" y="81" fill="#f4f7ff" font-size="12" font-family="Inter, Segoe UI, sans-serif" font-weight="700">4 / 5 lanes stable</text>
-          <rect x="278" y="132" width="1288" height="254" rx="28" fill="rgba(9,16,28,0.96)" stroke="rgba(255,255,255,0.06)" />
+          <rect x="278" y="132" width="1288" height="292" rx="28" fill="rgba(9,16,28,0.96)" stroke="rgba(255,255,255,0.06)" />
 <text x="320" y="172" fill="#74c8ff" font-size="11" letter-spacing="5" font-family="Inter, Segoe UI, sans-serif" font-weight="700">CYBERARK CONNECTOR OBSERVABILITY EXPORTER</text>
-<text x="320" y="236" fill="#f5f7fd" font-size="48" font-family="Georgia, Times New Roman, serif" font-weight="700">Audit evidence for connector-exporter operations.</text>
-<text x="320" y="274" fill="#96a9c6" font-size="21" font-family="Inter, Segoe UI, sans-serif">A replayable log of scrapes, export failures, and remediation recommendations.</text>
-<rect x="320" y="300" width="248" height="110" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
-<text x="344" y="326" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">CONNECTORS</text>
-<text x="344" y="372" fill="#f5f7fd" font-size="34" font-family="Inter, Segoe UI, sans-serif" font-weight="800">5</text>
-<text x="344" y="396" fill="#96a9c6" font-size="14" font-family="Inter, Segoe UI, sans-serif">Total modeled fleet across PSM, CPM, PVWA, vendor, and identity lanes.</text>
-<rect x="586" y="300" width="248" height="110" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
-<text x="610" y="326" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">DEGRADED CONNECTORS</text>
-<text x="610" y="372" fill="#f5f7fd" font-size="34" font-family="Inter, Segoe UI, sans-serif" font-weight="800">2</text>
-<text x="610" y="396" fill="#96a9c6" font-size="14" font-family="Inter, Segoe UI, sans-serif">Vendor access and EMEA PSM are now carrying the bulk of connector risk.</text>
-<rect x="852" y="300" width="248" height="110" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
-<text x="876" y="326" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">OTEL COVERAGE</text>
-<text x="876" y="372" fill="#f5f7fd" font-size="34" font-family="Inter, Segoe UI, sans-serif" font-weight="800">80%</text>
-<text x="876" y="396" fill="#96a9c6" font-size="14" font-family="Inter, Segoe UI, sans-serif">Only one connector still sits outside the modern telemetry export path.</text>
-<rect x="1118" y="300" width="410" height="110" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
-<text x="1142" y="326" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">LEAD RECOMMENDATION</text>
-<text x="1142" y="355" fill="#f6c46a" font-size="18" font-family="Georgia, Times New Roman, serif" font-weight="700">Clear vendor saturation and legacy-auth pressure first.</text>
-<text x="1142" y="382" fill="#dce7fb" font-size="14" font-family="Inter, Segoe UI, sans-serif">Drain the broker pool, rotate credentials, and move the lane into OTel before the next review window.</text>
-<rect x="278" y="422" width="1288" height="478" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
+<text x="320" y="234" fill="#f5f7fd" font-size="40" font-family="Georgia, Times New Roman, serif" font-weight="700"><tspan x="320" dy="0">Audit evidence for connector-exporter operations.</tspan></text>
+<text x="320" y="322" fill="#96a9c6" font-size="21" font-family="Inter, Segoe UI, sans-serif" font-weight="400"><tspan x="320" dy="0">A replayable log of scrapes, export failures, and remediation recommendations.</tspan></text>
+<rect x="320" y="342" width="248" height="126" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
+<text x="344" y="368" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">CONNECTORS</text>
+<text x="344" y="414" fill="#f5f7fd" font-size="34" font-family="Inter, Segoe UI, sans-serif" font-weight="800">5</text>
+<text x="344" y="436" fill="#96a9c6" font-size="13" font-family="Inter, Segoe UI, sans-serif" font-weight="400"><tspan x="344" dy="0">Total modeled fleet across</tspan><tspan x="344" dy="18">PSM, CPM, PVWA, vendor, and</tspan><tspan x="344" dy="18">identity lanes.</tspan></text>
+<rect x="586" y="342" width="248" height="126" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
+<text x="610" y="368" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">DEGRADED CONNECTORS</text>
+<text x="610" y="414" fill="#f5f7fd" font-size="34" font-family="Inter, Segoe UI, sans-serif" font-weight="800">2</text>
+<text x="610" y="436" fill="#96a9c6" font-size="13" font-family="Inter, Segoe UI, sans-serif" font-weight="400"><tspan x="610" dy="0">Vendor access and EMEA PSM are</tspan><tspan x="610" dy="18">now carrying the bulk of</tspan><tspan x="610" dy="18">connector risk.</tspan></text>
+<rect x="852" y="342" width="248" height="126" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
+<text x="876" y="368" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">OTEL COVERAGE</text>
+<text x="876" y="414" fill="#f5f7fd" font-size="34" font-family="Inter, Segoe UI, sans-serif" font-weight="800">80%</text>
+<text x="876" y="436" fill="#96a9c6" font-size="13" font-family="Inter, Segoe UI, sans-serif" font-weight="400"><tspan x="876" dy="0">Only one connector still sits</tspan><tspan x="876" dy="18">outside the modern telemetry</tspan><tspan x="876" dy="18">export path.</tspan></text>
+<rect x="1118" y="342" width="410" height="126" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
+<text x="1142" y="368" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">LEAD RECOMMENDATION</text>
+<text x="1142" y="398" fill="#f6c46a" font-size="16" font-family="Georgia, Times New Roman, serif" font-weight="700"><tspan x="1142" dy="0">Clear vendor saturation and</tspan><tspan x="1142" dy="24">legacy-auth pressure first.</tspan></text>
+<text x="1142" y="438" fill="#dce7fb" font-size="13" font-family="Inter, Segoe UI, sans-serif" font-weight="400"><tspan x="1142" dy="0">Drain the broker pool, rotate credentials, and</tspan><tspan x="1142" dy="18">move the lane into OTel before the next review</tspan><tspan x="1142" dy="18">window.</tspan></text>
+<rect x="278" y="460" width="1288" height="440" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
 <text x="314" y="456" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">AUDIT EVIDENCE</text>
-<text x="314" y="492" fill="#f5f7fd" font-size="26" font-family="Georgia, Times New Roman, serif" font-weight="700">The exporter should leave behind a replayable trail, not just a gauge.</text>
-<rect x="314" y="536" width="1218" height="320" rx="22" fill="rgba(2,6,12,0.90)" stroke="rgba(255,255,255,0.08)" />
-<rect x="314" y="536" width="1218" height="46" rx="22" fill="rgba(255,255,255,0.03)" />
-<circle cx="338" cy="559" r="5" fill="rgba(255,121,135,0.7)" />
-<circle cx="356" cy="559" r="5" fill="rgba(246,196,106,0.7)" />
-<circle cx="374" cy="559" r="5" fill="rgba(73,215,158,0.7)" />
-<text x="398" y="563" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">CONNECTOR-OBSERVABILITY RUNTIME LOG</text>
+<text x="314" y="496" fill="#f5f7fd" font-size="24" font-family="Georgia, Times New Roman, serif" font-weight="700"><tspan x="314" dy="0">The exporter should leave behind a replayable</tspan><tspan x="314" dy="30">trail, not just a gauge.</tspan></text>
+<rect x="314" y="548" width="1218" height="308" rx="22" fill="rgba(2,6,12,0.90)" stroke="rgba(255,255,255,0.08)" />
+<rect x="314" y="548" width="1218" height="46" rx="22" fill="rgba(255,255,255,0.03)" />
+<circle cx="338" cy="571" r="5" fill="rgba(255,121,135,0.7)" />
+<circle cx="356" cy="571" r="5" fill="rgba(246,196,106,0.7)" />
+<circle cx="374" cy="571" r="5" fill="rgba(73,215,158,0.7)" />
+<text x="398" y="575" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">CONNECTOR-OBSERVABILITY RUNTIME LOG</text>
 
     <rect x="332" y="570" width="1214" height="52" rx="14" fill="rgba(255,255,255,0.02)" />
     <text x="350" y="594" fill="#6f83a0" font-size="11" font-family="Consolas, 'Courier New', monospace">2026-05-14 10:01:12</text>

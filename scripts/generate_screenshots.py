@@ -1,5 +1,6 @@
 from pathlib import Path
 from textwrap import dedent
+from html import escape
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -84,6 +85,46 @@ def write(name: str, content: str) -> None:
     (OUT / name).write_text(content, encoding="utf-8")
 
 
+def wrapped_text(
+    text: str,
+    x: int,
+    y: int,
+    max_chars: int,
+    line_height: int,
+    font_size: int,
+    fill: str,
+    font_family: str,
+    font_weight: str | int = "400",
+    letter_spacing: int | None = None,
+) -> str:
+    words = text.split()
+    lines: list[str] = []
+    current = ""
+    for word in words:
+        candidate = word if not current else f"{current} {word}"
+        if len(candidate) <= max_chars:
+            current = candidate
+        else:
+            if current:
+                lines.append(current)
+            current = word
+    if current:
+        lines.append(current)
+
+    tspans = []
+    for index, line in enumerate(lines):
+        dy = "0" if index == 0 else str(line_height)
+        extra = f' letter-spacing="{letter_spacing}"' if letter_spacing is not None else ""
+        tspans.append(
+            f'<tspan x="{x}" dy="{dy}"{extra}>{escape(line)}</tspan>'
+        )
+
+    return (
+        f'<text x="{x}" y="{y}" fill="{fill}" font-size="{font_size}" '
+        f'font-family="{font_family}" font-weight="{font_weight}">{"".join(tspans)}</text>'
+    )
+
+
 def svg_shell(title: str, body: str) -> str:
     return dedent(
         f"""\
@@ -162,26 +203,26 @@ def svg_shell(title: str, body: str) -> str:
 def hero(title: str, subtitle: str) -> str:
     return dedent(
         f"""\
-        <rect x="278" y="132" width="1288" height="254" rx="28" fill="rgba(9,16,28,0.96)" stroke="rgba(255,255,255,0.06)" />
+        <rect x="278" y="132" width="1288" height="292" rx="28" fill="rgba(9,16,28,0.96)" stroke="rgba(255,255,255,0.06)" />
         <text x="320" y="172" fill="#74c8ff" font-size="11" letter-spacing="5" font-family="Inter, Segoe UI, sans-serif" font-weight="700">CYBERARK CONNECTOR OBSERVABILITY EXPORTER</text>
-        <text x="320" y="236" fill="#f5f7fd" font-size="48" font-family="Georgia, Times New Roman, serif" font-weight="700">{title}</text>
-        <text x="320" y="274" fill="#96a9c6" font-size="21" font-family="Inter, Segoe UI, sans-serif">{subtitle}</text>
-        <rect x="320" y="300" width="248" height="110" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
-        <text x="344" y="326" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">CONNECTORS</text>
-        <text x="344" y="372" fill="#f5f7fd" font-size="34" font-family="Inter, Segoe UI, sans-serif" font-weight="800">5</text>
-        <text x="344" y="396" fill="#96a9c6" font-size="14" font-family="Inter, Segoe UI, sans-serif">Total modeled fleet across PSM, CPM, PVWA, vendor, and identity lanes.</text>
-        <rect x="586" y="300" width="248" height="110" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
-        <text x="610" y="326" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">DEGRADED CONNECTORS</text>
-        <text x="610" y="372" fill="#f5f7fd" font-size="34" font-family="Inter, Segoe UI, sans-serif" font-weight="800">2</text>
-        <text x="610" y="396" fill="#96a9c6" font-size="14" font-family="Inter, Segoe UI, sans-serif">Vendor access and EMEA PSM are now carrying the bulk of connector risk.</text>
-        <rect x="852" y="300" width="248" height="110" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
-        <text x="876" y="326" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">OTEL COVERAGE</text>
-        <text x="876" y="372" fill="#f5f7fd" font-size="34" font-family="Inter, Segoe UI, sans-serif" font-weight="800">80%</text>
-        <text x="876" y="396" fill="#96a9c6" font-size="14" font-family="Inter, Segoe UI, sans-serif">Only one connector still sits outside the modern telemetry export path.</text>
-        <rect x="1118" y="300" width="410" height="110" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
-        <text x="1142" y="326" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">LEAD RECOMMENDATION</text>
-        <text x="1142" y="355" fill="#f6c46a" font-size="18" font-family="Georgia, Times New Roman, serif" font-weight="700">Clear vendor saturation and legacy-auth pressure first.</text>
-        <text x="1142" y="382" fill="#dce7fb" font-size="14" font-family="Inter, Segoe UI, sans-serif">Drain the broker pool, rotate credentials, and move the lane into OTel before the next review window.</text>
+        {wrapped_text(title, 320, 234, 50, 46, 40, "#f5f7fd", "Georgia, Times New Roman, serif", "700")}
+        {wrapped_text(subtitle, 320, 322, 80, 28, 21, "#96a9c6", "Inter, Segoe UI, sans-serif")}
+        <rect x="320" y="342" width="248" height="126" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
+        <text x="344" y="368" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">CONNECTORS</text>
+        <text x="344" y="414" fill="#f5f7fd" font-size="34" font-family="Inter, Segoe UI, sans-serif" font-weight="800">5</text>
+        {wrapped_text("Total modeled fleet across PSM, CPM, PVWA, vendor, and identity lanes.", 344, 436, 30, 18, 13, "#96a9c6", "Inter, Segoe UI, sans-serif")}
+        <rect x="586" y="342" width="248" height="126" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
+        <text x="610" y="368" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">DEGRADED CONNECTORS</text>
+        <text x="610" y="414" fill="#f5f7fd" font-size="34" font-family="Inter, Segoe UI, sans-serif" font-weight="800">2</text>
+        {wrapped_text("Vendor access and EMEA PSM are now carrying the bulk of connector risk.", 610, 436, 30, 18, 13, "#96a9c6", "Inter, Segoe UI, sans-serif")}
+        <rect x="852" y="342" width="248" height="126" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
+        <text x="876" y="368" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">OTEL COVERAGE</text>
+        <text x="876" y="414" fill="#f5f7fd" font-size="34" font-family="Inter, Segoe UI, sans-serif" font-weight="800">80%</text>
+        {wrapped_text("Only one connector still sits outside the modern telemetry export path.", 876, 436, 30, 18, 13, "#96a9c6", "Inter, Segoe UI, sans-serif")}
+        <rect x="1118" y="342" width="410" height="126" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
+        <text x="1142" y="368" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">LEAD RECOMMENDATION</text>
+        {wrapped_text("Clear vendor saturation and legacy-auth pressure first.", 1142, 398, 33, 24, 16, "#f6c46a", "Georgia, Times New Roman, serif", "700")}
+        {wrapped_text("Drain the broker pool, rotate credentials, and move the lane into OTel before the next review window.", 1142, 438, 46, 18, 13, "#dce7fb", "Inter, Segoe UI, sans-serif")}
         """
     )
 
@@ -237,9 +278,9 @@ def connector_row(x: int, y: int, w: int, connector: dict) -> str:
         <text x="{x+w-56}" y="{y+30}" fill="#6f83a0" font-size="9" text-anchor="middle" font-family="Inter, Segoe UI, sans-serif" font-weight="700">RISK</text>
         <text x="{x+w-56}" y="{y+56}" fill="#f5f7fd" font-size="24" text-anchor="middle" font-family="Inter, Segoe UI, sans-serif" font-weight="800">{connector["risk"]}</text>
         <text x="{x+24}" y="{y+96}" fill="#6f83a0" font-size="10" letter-spacing="2" font-family="Inter, Segoe UI, sans-serif" font-weight="700">TOP CONCERN</text>
-        <text x="{x+24}" y="{y+120}" fill="#dce7fb" font-size="14" font-family="Inter, Segoe UI, sans-serif">{connector["concern"]}</text>
+        {wrapped_text(connector["concern"], x + 24, y + 120, 55, 18, 14, "#dce7fb", "Inter, Segoe UI, sans-serif")}
         {flags}
-        <text x="{x+24}" y="{y+205}" fill="#f6c46a" font-size="12" font-family="Inter, Segoe UI, sans-serif" font-weight="700">{connector["recommendation"]}</text>
+        {wrapped_text(connector["recommendation"], x + 24, y + 198, 64, 16, 11, "#f6c46a", "Inter, Segoe UI, sans-serif", "700")}
         """
     )
 
@@ -261,7 +302,7 @@ def connector_detail_card(x: int, y: int, connector: dict) -> str:
     tone = "hot" if connector["risk"] >= 80 else "watch" if connector["risk"] >= 55 else "good"
     return dedent(
         f"""\
-        <rect x="{x}" y="{y}" width="392" height="334" rx="24" fill="rgba(6,11,20,0.84)" stroke="rgba(255,255,255,0.06)" />
+        <rect x="{x}" y="{y}" width="392" height="352" rx="24" fill="rgba(6,11,20,0.84)" stroke="rgba(255,255,255,0.06)" />
         <text x="{x+24}" y="{y+34}" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">{connector["pool"].upper()}</text>
         <text x="{x+24}" y="{y+68}" fill="#f5f7fd" font-size="28" font-family="Inter, Segoe UI, sans-serif" font-weight="800">{connector["name"]}</text>
         <text x="{x+24}" y="{y+92}" fill="#96a9c6" font-size="13" font-family="Inter, Segoe UI, sans-serif">{connector["region"]} · {connector["verdict"]} posture</text>
@@ -271,7 +312,7 @@ def connector_detail_card(x: int, y: int, connector: dict) -> str:
         {meter_block(x+24, y+178, 344, "Auth failure pressure", min(100, connector["auth"] * 3), tone)}
         {meter_block(x+24, y+224, 344, "Latency pressure", min(100, round(connector["latency"] / 7)), tone)}
         {meter_block(x+24, y+270, 344, "Telemetry freshness", connector["freshness"], "good" if connector["freshness"] > 75 else "watch")}
-        <text x="{x+24}" y="{y+316}" fill="#dce7fb" font-size="12" font-family="Inter, Segoe UI, sans-serif">{connector["recommendation"]}</text>
+        {wrapped_text(connector["recommendation"], x + 24, y + 318, 48, 16, 11, "#dce7fb", "Inter, Segoe UI, sans-serif")}
         """
     )
 
@@ -283,17 +324,17 @@ def overview_svg() -> str:
     )
     body += dedent(
         f"""\
-        <rect x="278" y="422" width="676" height="478" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
+        <rect x="278" y="460" width="676" height="440" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
         <text x="314" y="456" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">POOL PRESSURE BY CONNECTOR LANE</text>
-        <text x="314" y="492" fill="#f5f7fd" font-size="26" font-family="Georgia, Times New Roman, serif" font-weight="700">Where saturation is starting to outrun comfortable connector health.</text>
-        <text x="314" y="522" fill="#96a9c6" font-size="15" font-family="Inter, Segoe UI, sans-serif">A connector can look alive and still be heading toward blind-spot territory if saturation, stale scrapes, and auth failures rise together.</text>
+        {wrapped_text("Where saturation is starting to outrun comfortable connector health.", 314, 496, 42, 30, 24, "#f5f7fd", "Georgia, Times New Roman, serif", "700")}
+        {wrapped_text("A connector can look alive and still be heading toward blind-spot territory if saturation, stale scrapes, and auth failures rise together.", 314, 560, 66, 20, 14, "#96a9c6", "Inter, Segoe UI, sans-serif")}
         <line x1="320" y1="790" x2="910" y2="790" stroke="rgba(255,255,255,0.10)" />
         {bar_chart()}
-        <rect x="976" y="422" width="590" height="478" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
+        <rect x="976" y="460" width="590" height="440" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
         <text x="1012" y="456" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">TOP CONNECTOR BOARD</text>
-        <text x="1012" y="492" fill="#f5f7fd" font-size="26" font-family="Georgia, Times New Roman, serif" font-weight="700">The riskiest exporter lanes stay visible.</text>
-        {connector_row(1008, 534, 526, CONNECTORS[0])}
-        <text x="1012" y="796" fill="#dce7fb" font-size="14" font-family="Inter, Segoe UI, sans-serif">The README should show why this exporter matters immediately: connector pressure, exporter trust, and remediation direction on the same surface.</text>
+        {wrapped_text("The riskiest exporter lanes stay visible.", 1012, 496, 32, 30, 24, "#f5f7fd", "Georgia, Times New Roman, serif", "700")}
+        {connector_row(1008, 554, 526, CONNECTORS[0])}
+        {wrapped_text("The README should show why this exporter matters immediately: connector pressure, exporter trust, and remediation direction on the same surface.", 1012, 796, 58, 20, 13, "#dce7fb", "Inter, Segoe UI, sans-serif")}
         """
     )
     return svg_shell("OVERVIEW SNAPSHOT", body)
@@ -306,13 +347,13 @@ def connectors_svg() -> str:
     )
     body += dedent(
         f"""\
-        <rect x="278" y="422" width="1288" height="478" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
+        <rect x="278" y="460" width="1288" height="440" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
         <text x="314" y="456" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">CONNECTOR BOARD</text>
-        <text x="314" y="492" fill="#f5f7fd" font-size="26" font-family="Georgia, Times New Roman, serif" font-weight="700">Each connector combines pool saturation, auth failures, latency, and telemetry freshness.</text>
-        <text x="314" y="522" fill="#96a9c6" font-size="15" font-family="Inter, Segoe UI, sans-serif">This is the practical operator surface for deciding which connector pool needs load relief, auth cleanup, certificate work, or an OTel export fix.</text>
-        {connector_detail_card(314, 554, CONNECTORS[0])}
-        {connector_detail_card(734, 554, CONNECTORS[1])}
-        {connector_detail_card(1154, 554, CONNECTORS[2])}
+        {wrapped_text("Each connector combines pool saturation, auth failures, latency, and telemetry freshness.", 314, 496, 54, 30, 24, "#f5f7fd", "Georgia, Times New Roman, serif", "700")}
+        {wrapped_text("This is the practical operator surface for deciding which connector pool needs load relief, auth cleanup, certificate work, or an OTel export fix.", 314, 560, 74, 20, 14, "#96a9c6", "Inter, Segoe UI, sans-serif")}
+        {connector_detail_card(314, 548, CONNECTORS[0])}
+        {connector_detail_card(734, 548, CONNECTORS[1])}
+        {connector_detail_card(1154, 548, CONNECTORS[2])}
         """
     )
     return svg_shell("CONNECTOR BOARD", body)
@@ -340,15 +381,15 @@ def audit_svg() -> str:
     )
     body += dedent(
         f"""\
-        <rect x="278" y="422" width="1288" height="478" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
+        <rect x="278" y="460" width="1288" height="440" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
         <text x="314" y="456" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">AUDIT EVIDENCE</text>
-        <text x="314" y="492" fill="#f5f7fd" font-size="26" font-family="Georgia, Times New Roman, serif" font-weight="700">The exporter should leave behind a replayable trail, not just a gauge.</text>
-        <rect x="314" y="536" width="1218" height="320" rx="22" fill="rgba(2,6,12,0.90)" stroke="rgba(255,255,255,0.08)" />
-        <rect x="314" y="536" width="1218" height="46" rx="22" fill="rgba(255,255,255,0.03)" />
-        <circle cx="338" cy="559" r="5" fill="rgba(255,121,135,0.7)" />
-        <circle cx="356" cy="559" r="5" fill="rgba(246,196,106,0.7)" />
-        <circle cx="374" cy="559" r="5" fill="rgba(73,215,158,0.7)" />
-        <text x="398" y="563" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">CONNECTOR-OBSERVABILITY RUNTIME LOG</text>
+        {wrapped_text("The exporter should leave behind a replayable trail, not just a gauge.", 314, 496, 47, 30, 24, "#f5f7fd", "Georgia, Times New Roman, serif", "700")}
+        <rect x="314" y="548" width="1218" height="308" rx="22" fill="rgba(2,6,12,0.90)" stroke="rgba(255,255,255,0.08)" />
+        <rect x="314" y="548" width="1218" height="46" rx="22" fill="rgba(255,255,255,0.03)" />
+        <circle cx="338" cy="571" r="5" fill="rgba(255,121,135,0.7)" />
+        <circle cx="356" cy="571" r="5" fill="rgba(246,196,106,0.7)" />
+        <circle cx="374" cy="571" r="5" fill="rgba(73,215,158,0.7)" />
+        <text x="398" y="575" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">CONNECTOR-OBSERVABILITY RUNTIME LOG</text>
         {''.join(log_rows)}
         """
     )
@@ -369,25 +410,25 @@ def metrics_svg() -> str:
     )
     body += dedent(
         f"""\
-        <rect x="278" y="422" width="500" height="478" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
+        <rect x="278" y="460" width="500" height="440" rx="26" fill="rgba(9,16,28,0.92)" stroke="rgba(255,255,255,0.06)" />
         <text x="314" y="456" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">EXPORTER CONFIGURATION</text>
-        <text x="314" y="492" fill="#f5f7fd" font-size="26" font-family="Georgia, Times New Roman, serif" font-weight="700">Prometheus text output plus clear exporter posture.</text>
-        <rect x="314" y="536" width="428" height="98" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
-        <text x="338" y="564" fill="#6f83a0" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">SCRAPE INTERVAL</text>
-        <text x="338" y="602" fill="#f5f7fd" font-size="30" font-family="Inter, Segoe UI, sans-serif" font-weight="800">30 seconds</text>
-        <rect x="314" y="652" width="428" height="104" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
-        <text x="338" y="680" fill="#6f83a0" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">PROMETHEUS NAMESPACE</text>
-        <text x="338" y="718" fill="#f5f7fd" font-size="22" font-family="Inter, Segoe UI, sans-serif" font-weight="800">cyberark_connector</text>
-        <rect x="314" y="774" width="428" height="104" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
-        <text x="338" y="802" fill="#6f83a0" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">OTEL ENDPOINT</text>
-        <text x="338" y="840" fill="#f5f7fd" font-size="18" font-family="Inter, Segoe UI, sans-serif" font-weight="700">otel-collector.internal:4318/v1/metrics</text>
-        <rect x="802" y="422" width="764" height="478" rx="26" fill="rgba(2,6,12,0.92)" stroke="rgba(255,255,255,0.08)" />
-        <rect x="802" y="422" width="764" height="48" rx="26" fill="rgba(255,255,255,0.03)" />
-        <circle cx="826" cy="446" r="5" fill="rgba(255,121,135,0.7)" />
-        <circle cx="844" cy="446" r="5" fill="rgba(246,196,106,0.7)" />
-        <circle cx="862" cy="446" r="5" fill="rgba(73,215,158,0.7)" />
-        <text x="886" y="450" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">/METRICS</text>
-        <text x="834" y="522" fill="#96a9c6" font-size="14" font-family="Inter, Segoe UI, sans-serif">The README proof should show the metrics surface is real, queryable, and tied back to connector health.</text>
+        {wrapped_text("Prometheus text output plus clear exporter posture.", 314, 496, 42, 30, 24, "#f5f7fd", "Georgia, Times New Roman, serif", "700")}
+        <rect x="314" y="548" width="428" height="88" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
+        <text x="338" y="574" fill="#6f83a0" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">SCRAPE INTERVAL</text>
+        <text x="338" y="612" fill="#f5f7fd" font-size="30" font-family="Inter, Segoe UI, sans-serif" font-weight="800">30 seconds</text>
+        <rect x="314" y="652" width="428" height="88" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
+        <text x="338" y="678" fill="#6f83a0" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">PROMETHEUS NAMESPACE</text>
+        <text x="338" y="716" fill="#f5f7fd" font-size="22" font-family="Inter, Segoe UI, sans-serif" font-weight="800">cyberark_connector</text>
+        <rect x="314" y="756" width="428" height="122" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
+        <text x="338" y="782" fill="#6f83a0" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">OTEL ENDPOINT</text>
+        {wrapped_text("otel-collector.internal:4318/v1/metrics", 338, 820, 32, 18, 17, "#f5f7fd", "Inter, Segoe UI, sans-serif", "700")}
+        <rect x="802" y="460" width="764" height="440" rx="26" fill="rgba(2,6,12,0.92)" stroke="rgba(255,255,255,0.08)" />
+        <rect x="802" y="460" width="764" height="48" rx="26" fill="rgba(255,255,255,0.03)" />
+        <circle cx="826" cy="484" r="5" fill="rgba(255,121,135,0.7)" />
+        <circle cx="844" cy="484" r="5" fill="rgba(246,196,106,0.7)" />
+        <circle cx="862" cy="484" r="5" fill="rgba(73,215,158,0.7)" />
+        <text x="886" y="488" fill="#74c8ff" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">/METRICS</text>
+        {wrapped_text("The README proof should show the metrics surface is real, queryable, and tied back to connector health.", 834, 548, 58, 18, 13, "#96a9c6", "Inter, Segoe UI, sans-serif")}
         {''.join(metric_lines)}
         """
     )
