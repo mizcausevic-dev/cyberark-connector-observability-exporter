@@ -19,6 +19,10 @@ LEGACY = [
     "02-connector-board-v2.svg",
     "03-audit-log-v2.svg",
     "04-metrics-proof-v2.svg",
+    "01-overview-v3.svg",
+    "02-connector-board-v3.svg",
+    "03-audit-log-v3.svg",
+    "04-metrics-proof-v3.svg",
 ]
 
 
@@ -133,6 +137,26 @@ def wrapped_text(
     )
 
 
+def flag_pills(flags: list[str], x: int, y: int, max_width: int) -> str:
+    pieces: list[str] = []
+    cursor_x = x
+    cursor_y = y
+    row_height = 34
+    for flag in flags:
+        label = flag.upper()
+        width = max(120, min(164, 8 * len(label) + 30))
+        if cursor_x + width > x + max_width:
+            cursor_x = x
+            cursor_y += row_height
+        pieces.append(
+            f'<rect x="{cursor_x}" y="{cursor_y}" width="{width}" height="26" rx="13" fill="rgba(116,200,255,0.08)" />'
+            f'<text x="{cursor_x + width/2}" y="{cursor_y + 17}" fill="#74c8ff" font-size="9" text-anchor="middle" '
+            f'font-family="Inter, Segoe UI, sans-serif" font-weight="700">{label}</text>'
+        )
+        cursor_x += width + 10
+    return "".join(pieces)
+
+
 def svg_shell(title: str, body: str) -> str:
     return dedent(
         f"""\
@@ -229,8 +253,8 @@ def hero(title: str, subtitle: str) -> str:
         {wrapped_text("Only one connector still sits outside the modern telemetry export path.", 876, 436, 30, 18, 13, "#96a9c6", "Inter, Segoe UI, sans-serif")}
         <rect x="1118" y="342" width="410" height="126" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" />
         <text x="1142" y="368" fill="#71839d" font-size="10" letter-spacing="3" font-family="Inter, Segoe UI, sans-serif" font-weight="700">LEAD RECOMMENDATION</text>
-        {wrapped_text("Clear vendor saturation and legacy-auth pressure first.", 1142, 398, 33, 24, 16, "#f6c46a", "Georgia, Times New Roman, serif", "700")}
-        {wrapped_text("Drain the broker pool, rotate credentials, and move the lane into OTel before the next review window.", 1142, 438, 46, 18, 13, "#dce7fb", "Inter, Segoe UI, sans-serif")}
+        {wrapped_text("Clear vendor saturation and legacy-auth pressure first.", 1142, 398, 27, 24, 16, "#f6c46a", "Georgia, Times New Roman, serif", "700")}
+        {wrapped_text("Drain the broker pool, rotate credentials, and move the lane into OTel before the next review window.", 1142, 438, 34, 18, 13, "#dce7fb", "Inter, Segoe UI, sans-serif")}
         """
     )
 
@@ -268,17 +292,11 @@ def connector_row(x: int, y: int, w: int, connector: dict) -> str:
         "warning": "#f6c46a",
         "healthy": "#49d79e",
     }[connector["tag_class"]]
-    flags = ""
-    flag_x = x + 24
-    flag_y = y + 146
-    for flag in connector["flags"]:
-        width = max(126, 12 * len(flag))
-        flags += f'<rect x="{flag_x}" y="{flag_y}" width="{width}" height="26" rx="13" fill="rgba(116,200,255,0.08)" /><text x="{flag_x + width/2}" y="{flag_y + 17}" fill="#74c8ff" font-size="10" text-anchor="middle" font-family="Inter, Segoe UI, sans-serif" font-weight="700">{flag.upper()}</text>'
-        flag_x += width + 10
+    flags = flag_pills(connector["flags"], x + 24, y + 146, w - 48)
 
     return dedent(
         f"""\
-        <rect x="{x}" y="{y}" width="{w}" height="220" rx="22" fill="rgba(4,9,18,0.62)" stroke="rgba(255,255,255,0.06)" />
+        <rect x="{x}" y="{y}" width="{w}" height="244" rx="22" fill="rgba(4,9,18,0.62)" stroke="rgba(255,255,255,0.06)" />
         <text x="{x+24}" y="{y+36}" fill="#f5f7fd" font-size="24" font-family="Inter, Segoe UI, sans-serif" font-weight="800">{connector["name"]}</text>
         <text x="{x+24}" y="{y+60}" fill="#96a9c6" font-size="13" font-family="Inter, Segoe UI, sans-serif">{connector["pool"]} · {connector["region"]}</text>
         <rect x="{x+w-178}" y="{y+22}" width="96" height="30" rx="15" fill="{tag_bg}" stroke="rgba(255,255,255,0.06)" />
@@ -286,9 +304,9 @@ def connector_row(x: int, y: int, w: int, connector: dict) -> str:
         <text x="{x+w-56}" y="{y+30}" fill="#6f83a0" font-size="9" text-anchor="middle" font-family="Inter, Segoe UI, sans-serif" font-weight="700">RISK</text>
         <text x="{x+w-56}" y="{y+56}" fill="#f5f7fd" font-size="24" text-anchor="middle" font-family="Inter, Segoe UI, sans-serif" font-weight="800">{connector["risk"]}</text>
         <text x="{x+24}" y="{y+96}" fill="#6f83a0" font-size="10" letter-spacing="2" font-family="Inter, Segoe UI, sans-serif" font-weight="700">TOP CONCERN</text>
-        {wrapped_text(connector["concern"], x + 24, y + 120, 55, 18, 14, "#dce7fb", "Inter, Segoe UI, sans-serif")}
+        {wrapped_text(connector["concern"], x + 24, y + 120, 44, 18, 14, "#dce7fb", "Inter, Segoe UI, sans-serif")}
         {flags}
-        {wrapped_text(connector["recommendation"], x + 24, y + 198, 64, 16, 11, "#f6c46a", "Inter, Segoe UI, sans-serif", "700")}
+        {wrapped_text(connector["recommendation"], x + 24, y + 222, 46, 16, 11, "#f6c46a", "Inter, Segoe UI, sans-serif", "700")}
         """
     )
 
@@ -446,8 +464,8 @@ def metrics_svg() -> str:
 if __name__ == "__main__":
     for legacy in LEGACY:
         (OUT / legacy).unlink(missing_ok=True)
-    write("01-overview-v2.svg", overview_svg())
-    write("02-connector-board-v2.svg", connectors_svg())
-    write("03-audit-log-v2.svg", audit_svg())
-    write("04-metrics-proof-v2.svg", metrics_svg())
+    write("01-overview-v3.svg", overview_svg())
+    write("02-connector-board-v3.svg", connectors_svg())
+    write("03-audit-log-v3.svg", audit_svg())
+    write("04-metrics-proof-v3.svg", metrics_svg())
     print("rendered screenshots")

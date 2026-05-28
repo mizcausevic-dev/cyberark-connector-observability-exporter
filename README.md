@@ -19,22 +19,16 @@ CyberArk estates often have strong controls around vaulting and privileged acces
 
 ## Screenshots
 
-<p align="center">
-  <img src="./screenshots/01-overview-v2.svg" alt="Overview" width="100%" />
-</p>
-<p align="center">
-  <img src="./screenshots/02-connector-board-v2.svg" alt="Connector board" width="100%" />
-</p>
+![Overview](./screenshots/01-overview-v3.svg)
+
+![Connector board](./screenshots/02-connector-board-v3.svg)
 
 <details>
 <summary>More proof surfaces</summary>
 
-<p align="center">
-  <img src="./screenshots/03-audit-log-v2.svg" alt="Audit log" width="100%" />
-</p>
-<p align="center">
-  <img src="./screenshots/04-metrics-proof-v2.svg" alt="Metrics proof" width="100%" />
-</p>
+![Audit log](./screenshots/03-audit-log-v3.svg)
+
+![Metrics proof](./screenshots/04-metrics-proof-v3.svg)
 
 </details>
 
