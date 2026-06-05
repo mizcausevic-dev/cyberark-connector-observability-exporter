@@ -4,11 +4,11 @@ CyberArk Connector Observability Exporter is a Rust + Axum service that models c
 
 ## Core Flow
 
-1. Sample connector snapshots, audit events, and exporter configuration live in [C:\Users\chaus\dev\repos\cyberark-connector-observability-exporter\src\data.rs](/C:/Users/chaus/dev/repos/cyberark-connector-observability-exporter/src/data.rs).
-2. Route handlers in [C:\Users\chaus\dev\repos\cyberark-connector-observability-exporter\src\main.rs](/C:/Users/chaus/dev/repos/cyberark-connector-observability-exporter/src/main.rs) expose HTML proof surfaces, JSON APIs, and the Prometheus metrics endpoint.
-3. Assessment logic in [C:\Users\chaus\dev\repos\cyberark-connector-observability-exporter\src\engine.rs](/C:/Users/chaus/dev/repos/cyberark-connector-observability-exporter/src/engine.rs) converts pool saturation, auth failures, latency, stale scrapes, certificate age, and OTel coverage into ranked connector risk.
-4. Render helpers in [C:\Users\chaus\dev\repos\cyberark-connector-observability-exporter\src\render.rs](/C:/Users/chaus/dev/repos/cyberark-connector-observability-exporter/src/render.rs) turn those assessments into operator-readable HTML surfaces.
-5. Shared API contracts are defined in [C:\Users\chaus\dev\repos\cyberark-connector-observability-exporter\src\models.rs](/C:/Users/chaus/dev/repos/cyberark-connector-observability-exporter/src/models.rs).
+1. Sample connector snapshots, audit events, and exporter configuration live in [src/data.rs](../src/data.rs).
+2. Route handlers in [src/main.rs](../src/main.rs) expose HTML proof surfaces, JSON APIs, and the Prometheus metrics endpoint.
+3. Assessment logic in [src/engine.rs](../src/engine.rs) converts pool saturation, auth failures, latency, stale scrapes, certificate age, and OTel coverage into ranked connector risk.
+4. Render helpers in [src/render.rs](../src/render.rs) turn those assessments into operator-readable HTML surfaces.
+5. Shared API contracts are defined in [src/models.rs](../src/models.rs).
 
 ## Route Surface
 
